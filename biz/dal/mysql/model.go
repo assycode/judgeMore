@@ -81,3 +81,19 @@ type ScoreResult struct {
 	UpdatedAt     time.Time      `gorm:"column:updated_at"`
 	DeletedAt     gorm.DeletedAt `gorm:"index;column:deleted_at"`
 }
+type College struct {
+	CollegeId   int64          `gorm:"column:college_id;primaryKey;autoIncrement"`
+	CollegeName string         `gorm:"column:college_name"`
+	CreatedAt   time.Time      `gorm:"column:created_at"`
+	UpdatedAt   time.Time      `gorm:"column:updated_at"`
+	DeletedAt   gorm.DeletedAt `gorm:"index;column:deleted_at"`
+}
+
+type Major struct {
+	MajorId   int64          `gorm:"column:major_id;primaryKey;autoIncrement"`
+	CollegeId int64          `gorm:"column:college_id"`
+	MajorName string         `gorm:"column:major_name"`
+	CreatedAt time.Time      `gorm:"column:created_at"`
+	UpdatedAt time.Time      `gorm:"column:updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index;column:deleted_at"`
+}

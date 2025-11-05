@@ -6,4 +6,6 @@ const (
 	TableReconizedEvent = "recognized_events"
 	TableRule           = "event_rules"
 	TableScore          = "integral_results"
+	TableMajor          = "major"
+	TableCollege        = "college"
 )

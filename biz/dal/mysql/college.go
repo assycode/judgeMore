@@ -11,12 +11,14 @@ import (
 )
 
 type GetCollegeInfoFunc func(ctx context.Context) ([]*model.College, int64, error)
-type IsCollegeExistFunc func(ctx context.Context, college_id string) (bool, error)
+type IsCollegeExistFunc func(ctx context.Context, college_id int64) (bool, error)
+type CreateNewCollegeFunc func(ctx context.Context, college_name string) (int64, error)
 
 // 对外暴露的函数变量（默认指向真实实现,用于测试）
 var (
-	GetCollegeInfo GetCollegeInfoFunc = RealGetCollegeInfo
-	IsCollegeExist IsCollegeExistFunc = RealIsCollegeExist
+	GetCollegeInfo   GetCollegeInfoFunc   = RealGetCollegeInfo
+	IsCollegeExist   IsCollegeExistFunc   = RealIsCollegeExist
+	CreateNewCollege CreateNewCollegeFunc = RealCreateNewCollege
 )
 
 func RealGetCollegeInfo(ctx context.Context) ([]*model.College, int64, error) {
@@ -47,7 +49,7 @@ func buildCollegeInfoList(data []*College) []*model.College {
 	}
 	return resp
 }
-func RealIsCollegeExist(ctx context.Context, college_id string) (bool, error) {
+func RealIsCollegeExist(ctx context.Context, college_id int64) (bool, error) {
 	var collegeInfo *College
 	err := db.WithContext(ctx).
 		Table(constants.TableCollege).
@@ -61,4 +63,30 @@ func RealIsCollegeExist(ctx context.Context, college_id string) (bool, error) {
 		return false, errno.Errorf(errno.InternalDatabaseErrorCode, "mysql: failed to query college: %v", err)
 	}
 	return true, nil
+}
+func RealCreateNewCollege(ctx context.Context, college_name string) (int64, error) {
+	var college *College
+	err := db.WithContext(ctx).
+		Table(constants.TableCollege).
+		Where("college_name = ?", college_name).
+		First(&college).
+		Error
+	if err == nil { //找到了
+		return -1, errors.New("college_name already exists")
+	} else {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			return -1, errno.Errorf(errno.InternalDatabaseErrorCode, "mysql: failed to query college: %v", err)
+		}
+	}
+	c := &College{
+		CollegeName: college_name,
+	}
+	err = db.WithContext(ctx).
+		Table(constants.TableCollege).
+		Create(&c).
+		Error
+	if err != nil {
+		return -1, errno.Errorf(errno.InternalDatabaseErrorCode, "mysql: failed to create college: %v", err)
+	}
+	return c.CollegeId, nil
 }

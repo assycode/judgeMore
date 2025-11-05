@@ -51,7 +51,26 @@ struct ScoreRecord{
     10: string deleted_at         // 删除时
 }
 struct ScoreRecordList{
-         1: required list<ScoreRecord> items,
-         2: required i64 total,          //总数
-         3: required double sum,
+     1: required list<ScoreRecord> items,
+     2: required i64 total,          //总数
+     3: required double sum,
+}
+
+
+struct Major{
+    1 : string MajorName //专业名称
+    2 : i64 MajorId,
+    3 : i64 CollegeId //所属学院
+}
+struct MajorList{
+    1 : list <Major> item,
+    2: i64 total,
+}
+struct College{
+    1 : string CollegeName //专业名称
+    2 : i64 CollegeId //所属学院
+}
+struct CollegeList{
+    1 : list <College> item,
+    2: i64 total,
 }

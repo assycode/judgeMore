@@ -1,12 +1,12 @@
 package model
 
 type College struct {
-	CollegeId   string
+	CollegeId   int64
 	CollegeName string
 }
 
 type Major struct {
-	MajorId   string
+	MajorId   int64
 	MajorName string
-	CollegeId string
+	CollegeId int64
 }
