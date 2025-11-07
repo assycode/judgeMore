@@ -81,6 +81,7 @@ type ScoreResult struct {
 	UpdatedAt     time.Time      `gorm:"column:updated_at"`
 	DeletedAt     gorm.DeletedAt `gorm:"index;column:deleted_at"`
 }
+
 type College struct {
 	CollegeId   int64          `gorm:"column:college_id;primaryKey;autoIncrement"`
 	CollegeName string         `gorm:"column:college_name"`
@@ -97,3 +98,22 @@ type Major struct {
 	UpdatedAt time.Time      `gorm:"column:updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index;column:deleted_at"`
 }
+
+type Appeal struct {
+	AppealId       string         `gorm:"primaryKey;autoIncrement:true;column:appeal_id"`
+	ResultId       string         `gorm:"not null;column:result_id"`
+	UserId         string         `gorm:"not null;column:user_id"`
+	AppealType     string         `gorm:"size:50;not null;column:appeal_type"`
+	AppealReason   string         `gorm:"type:text;not null;column:appeal_reason"`
+	AttachmentPath string         `gorm:"size:500;column:attachment_path"`
+	Status         string         `gorm:"type:enum('pending','approved','rejected');not null;default:'pending';column:status"`
+	HandledBy      string         `gorm:"column:handled_by"`
+	HandledAt      *time.Time     `gorm:"column:handled_at"`
+	HandledResult  string         `gorm:"type:text;column:handled_result"`
+	AppealCount    int64          `gorm:"not null;default:1;column:appeal_count"`
+	CreatedAt      time.Time      `gorm:"column:created_at"`
+	UpdatedAt      time.Time      `gorm:"column:updated_at"`
+	DeletedAt      gorm.DeletedAt `gorm:"index;column:deleted_at"`
+}
+
+// TableName 指定表

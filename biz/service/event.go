@@ -79,7 +79,7 @@ func (svc *EventService) UpdateEventStatus(event_id string, status int64) (*mode
 	}
 	// 将计算积分加入任务队列，异步处理
 	if status == 1 {
-		taskqueue.AddScoreEvent(svc.ctx, constants.EventKey, event_id)
+		taskqueue.AddScoreTask(svc.ctx, constants.EventKey, event_id)
 	}
 	return info, nil
 }

@@ -107,26 +107,24 @@ CREATE TABLE `student_events`  (
                                    CONSTRAINT `student_events_ibfk_2` FOREIGN KEY (`recognized_id`) REFERENCES `recognized_events` (`recognized_event_id`) ON DELETE SET NULL ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 30000 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '学生赛事材料表' ROW_FORMAT = Dynamic;
 
--- ----------------------------
--- Table structure for appeals
--- ----------------------------
 DROP TABLE IF EXISTS `appeals`;
 CREATE TABLE `appeals`  (
                             `appeal_id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
-                            `event_id` bigint NOT NULL COMMENT '申诉的材料ID',
+                            `result_id` bigint NOT NULL COMMENT '申诉的结果ID',
                             `user_id` bigint NOT NULL COMMENT '申诉学生ID',
                             `appeal_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '申诉类型：分级异议/积分异议',
                             `appeal_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '申诉理由',
                             `attachment_path` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '佐证材料路径',
                             `status` enum('pending','approved','rejected') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'pending' COMMENT '状态：pending, approved, rejected',
-                            `handled_by` bigint NULL DEFAULT NULL COMMENT '处理人（辅导员）',
+                            `handled_by` varchar(50) NULL DEFAULT NULL COMMENT '处理人（辅导员)ID',
                             `handled_at` datetime NULL DEFAULT NULL COMMENT '处理时间',
                             `handled_result` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '处理结果说明',
                             `appeal_count` int NOT NULL DEFAULT 1 COMMENT '该材料申诉次数',
-                            `created_time` datetime NOT NULL COMMENT '申诉时间',
+                            `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                            `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                            `deleted_at` datetime NULL DEFAULT NULL COMMENT '删除时间',
                             PRIMARY KEY (`appeal_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '存储学生对审核结果的申诉记录' ROW_FORMAT = Dynamic;
-
+) ENGINE = InnoDB 20500 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '存储学生对审核结果的申诉记录' ROW_FORMAT = Dynamic;
 -- ----------------------------
 -- 第三步：创建依赖最多的表
 -- ----------------------------
@@ -154,7 +152,7 @@ CREATE TABLE `integral_results`  (
                                      INDEX `idx_status`(`status` ASC) USING BTREE,
                                      CONSTRAINT `integral_results_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `student_events` (`event_id`) ON DELETE CASCADE ON UPDATE RESTRICT,
                                      CONSTRAINT `integral_results_ibfk_4` FOREIGN KEY (`rule_id`) REFERENCES `event_rules` (`rule_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '积分计算结果表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10500 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '积分计算结果表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for feedbacks
@@ -198,7 +196,7 @@ CREATE TABLE `college`  (
                             `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                             `deleted_at` datetime NULL DEFAULT NULL COMMENT '删除时间',
                             PRIMARY KEY (`college_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10080 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '学院表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 100800 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '学院表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for major

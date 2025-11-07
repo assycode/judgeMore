@@ -36,7 +36,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 		pack.SendFailResponse(c, errno.ConvertErr(err))
 		return
 	}
-	resp.UserId = UserResp
+	resp.UserID = UserResp
 	resp.Base = pack.BuildBaseResp(errno.Success)
 	pack.SendResponse(c, resp)
 
@@ -166,6 +166,61 @@ func UpdateUserInfo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	resp.Data = pack.User(UserResp)
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
+}
+
+// SendEmail .
+// @router /api/update/user/password [POST]
+func SendEmail(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.SendEmailRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
+		return
+	}
+
+	resp := new(user.SendEmailResponse)
+	err = service.NewUserService(ctx, c).Email(&model.User{Email: req.Email})
+	if err != nil {
+		pack.SendFailResponse(c, errno.ConvertErr(err))
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
+}
+
+// UpdatePassword .
+// @router /api/update/user/password [PUT]
+func UpdatePassword(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.UpdateUserPasswordRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
+		return
+	}
+
+	resp := new(user.UpdateUserPasswordResponse)
+	err = service.NewUserService(ctx, c).UpdateUserPassword(&model.User{Uid: req.UserID, Password: req.Password}, req.Code)
+	resp.Base = pack.BuildBaseResp(errno.Success)
+	pack.SendResponse(c, resp)
+}
+
+// RefreshToken .
+// @router /api/auth/refresh [GET]
+func RefreshToken(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.RefreshTokenRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.SendFailResponse(c, errno.NewErrNo(errno.ParamMissingErrorCode, "param missing:"+err.Error()))
+		return
+	}
+
+	resp := new(user.RefreshTokenResponse)
 	resp.Base = pack.BuildBaseResp(errno.Success)
 	pack.SendResponse(c, resp)
 }

@@ -4,5 +4,6 @@ const (
 	WorkerNumber = 2
 )
 const (
-	EventKey = "event"
+	EventKey  = "event"
+	AppealKey = "appeal"
 )

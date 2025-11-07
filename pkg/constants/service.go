@@ -4,4 +4,6 @@ package constants
 const (
 	GatewayServiceName = "gateway"
 	UserServiceName    = "user"
+	OnAppeal           = "申诉中"
+	OffAppeal          = "正常"
 )

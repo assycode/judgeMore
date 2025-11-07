@@ -55,8 +55,26 @@ struct ScoreRecordList{
      2: required i64 total,          //总数
      3: required double sum,
 }
-
-
+struct Appeal{
+    1:string appeal_id,
+    2: string result_id,
+    3: string user_id,
+    4: string appeal_type,
+    5:string appeal_reason,
+    6:string attachment_path,
+    7:string status,
+    8:string handleBy,
+    9:string handleTime
+    10:string handleResult,
+    11:i64 appeal_count
+        12: string created_at,        // 创建时间
+        13: string updated_at,        // 更新时间
+        14: string deleted_at         // 删除时
+}
+struct AppealList{
+    1:required list<Appeal>items,
+    2:required i64 total
+}
 struct Major{
     1 : string MajorName //专业名称
     2 : i64 MajorId,

@@ -56,3 +56,33 @@ func _updateuserinfoMw() []app.HandlerFunc {
 	// your code...
 	return auth.Auth(1)
 }
+
+func _refreshtokenMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _updateMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _userMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _sendemailMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _updatepasswordMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _emailMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

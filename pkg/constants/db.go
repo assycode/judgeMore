@@ -8,4 +8,5 @@ const (
 	TableScore          = "integral_results"
 	TableMajor          = "major"
 	TableCollege        = "college"
+	TableAppeal         = "appeals"
 )

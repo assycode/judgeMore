@@ -12,7 +12,7 @@ import (
 )
 
 // 加入任务队列
-func AddScoreEvent(ctx context.Context, key, event_id string) {
+func AddScoreTask(ctx context.Context, key, event_id string) {
 	taskQueue.Add(key, taskqueue.QueueTask{Execute: func() error {
 		return calculateScore(ctx, event_id)
 	}})

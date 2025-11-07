@@ -22,9 +22,19 @@ func Register(r *server.Hertz) {
 		{
 			_auth := _api.Group("/auth", _authMw()...)
 			_auth.POST("/email", append(_verifyemailMw(), user.VerifyEmail)...)
+			_email := _auth.Group("/email", _emailMw()...)
+			_email.POST("/send", append(_sendemailMw(), user.SendEmail)...)
 			_auth.POST("/login", append(_loginMw(), user.Login)...)
 			_auth.POST("/logout", append(_logoutMw(), user.Logout)...)
+			_auth.GET("/refresh", append(_refreshtokenMw(), user.RefreshToken)...)
 			_auth.POST("/register", append(_registerMw(), user.Register)...)
+		}
+		{
+			_update := _api.Group("/update", _updateMw()...)
+			{
+				_user := _update.Group("/user", _userMw()...)
+				_user.PUT("/password", append(_updatepasswordMw(), user.UpdatePassword)...)
+			}
 		}
 		{
 			_users := _api.Group("/users", _usersMw()...)

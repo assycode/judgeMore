@@ -10,7 +10,7 @@ struct RegisterRequest {
 }
 struct RegisterResponse {
     1: required model.BaseResp base,
-    2: required string UserId,
+    2: required string user_id,
 }
 
 // login
@@ -58,7 +58,28 @@ struct VerifyEmailRequest{
 struct VerifyEmailResponse{
     1: required model.BaseResp base,
 }
-//
+// 发送邮箱
+struct SendEmailRequest{
+    1: required string email,
+}
+struct SendEmailResponse{
+    1: required model.BaseResp base,
+}
+// 修改密码
+struct UpdateUserPasswordRequest{
+   1: required string user_id
+   2: required string password
+   3: required string code,//验证码
+}
+struct UpdateUserPasswordResponse{
+   1: required model.BaseResp base,
+}
+struct RefreshTokenRequest{
+
+}
+struct RefreshTokenResponse{
+    1: required model.BaseResp base,
+}
 service UserService {
     RegisterResponse Register(1: RegisterRequest req)(api.post = "/api/auth/register"),
     LoginResponse Login(1: LoginRequest req)(api.post = "/api/auth/login"),
@@ -66,4 +87,7 @@ service UserService {
     VerifyEmailResponse VerifyEmail(1: VerifyEmailRequest req)(api.post = "/api/auth/email"),
     QueryUserInfoResponse QueryUserInfo(1: QueryUserInfoRequest req)(api.get = '/api/users/'),
     UpdateUserInfoResponse UpdateUserInfo(1: UpdateUserInfoRequest req)(api.put ='/api/users/me'),
+    SendEmailResponse SendEmail(1: SendEmailRequest req)(api.post = "/api/auth/email/send"),
+    UpdateUserPasswordResponse UpdatePassword(1: UpdateUserPasswordRequest req)(api.put = "/api/update/user/password"),
+    RefreshTokenResponse RefreshToken(1:RefreshTokenRequest req) (api.get = "/api/auth/refresh"),
 }

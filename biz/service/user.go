@@ -63,7 +63,7 @@ func (svc *UserService) Register(req *model.User) (string, error) {
 		return "", fmt.Errorf("hash password failed: %w", err)
 	}
 	//验证邮箱
-	err = svc.SendEmail(svc.ctx, req)
+	err = svc.SendEmail(req)
 	if err != nil {
 		return "", fmt.Errorf("send email failed: %w", err)
 	}
@@ -101,7 +101,48 @@ func (svc *UserService) UpdateUserInfo(u *model.User) (UserInfo *model.User, err
 	return userInfo, nil
 }
 
-func (svc *UserService) SendEmail(ctx context.Context, user *model.User) error {
+func (svc *UserService) UpdateUserPassword(u *model.User, c string) error {
+	exist, err := mysql.IsUserExist(svc.ctx, u)
+	if err != nil {
+		return fmt.Errorf("check user exist failed: %w", err)
+	}
+	if !exist {
+		return errno.NewErrNo(errno.ServiceUserExistCode, "user not exist")
+	}
+	// 验证code
+	email := fmt.Sprintf("%s%s", u.Uid, constants.EmailSuffix)
+	key := fmt.Sprintf("Email:%s", email)
+	exist = cache.IsKeyExist(svc.ctx, key)
+	if !exist {
+		return errors.New("code expired")
+	}
+	code, err := cache.GetCodeCache(svc.ctx, key)
+	if err != nil {
+		return err
+	}
+	if code != c {
+		return errors.New("code not match")
+	}
+	//
+	u.Password, err = crypt.PasswordHash(u.Password)
+	if err != nil {
+
+		return fmt.Errorf("hash password failed: %w", err)
+
+	}
+	return mysql.UpdateUserPassword(svc.ctx, u)
+}
+
+func (svc *UserService) Email(userInfo *model.User) error {
+	key := fmt.Sprintf("Email:%s", userInfo.Email)
+	exist := cache.IsKeyExist(svc.ctx, key)
+	if exist {
+		return fmt.Errorf("need wait a minute")
+	}
+	return svc.SendEmail(userInfo)
+}
+
+func (svc *UserService) SendEmail(user *model.User) error {
 	// 首先进行验证 学号即Uid 与fzu邮箱强绑定
 	Correct := strings.HasSuffix(user.Email, constants.EmailSuffix) && len(user.Email) == constants.EmailLength
 	if !Correct {
@@ -134,7 +175,7 @@ func (svc *UserService) UpdateUser(ctx context.Context, user *model.User) (*mode
 	}
 	// 如果有需要更新的字段才执行
 	if len(updateParams) > 0 {
-		return mysql.UpdateInfoByRoleId(svc.ctx, user.Uid, updateParams...)
+		return mysql.UpdateInfoByRoleId(ctx, user.Uid, updateParams...)
 	}
 
 	return nil, errno.Errorf(errno.InternalServiceErrorCode, "no element to update")

@@ -151,6 +151,18 @@ func buildScore(r *ScoreResult) *model.ScoreRecord {
 		DeleteAT:      0,
 	}
 }
+func UpdateResultAppealInfo(ctx context.Context, result_id, appeal_id, status string) error {
+	err := db.WithContext(ctx).
+		Table(constants.TableScore).
+		Where("result_id = ?", result_id).
+		Update("appeal_id", appeal_id).
+		Update("status", status).
+		Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func buildScoreList(rules []*ScoreResult) []*model.ScoreRecord {
 	list := make([]*model.ScoreRecord, 0)
 	for _, rule := range rules {

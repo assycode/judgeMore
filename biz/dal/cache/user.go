@@ -30,7 +30,7 @@ func PutCodeToCache(ctx context.Context, key string) (code string, err error) {
 	code = generateRandomCode(6)
 	timeNow := time.Now().Unix()
 	value := fmt.Sprintf("%s_%d", code, timeNow)
-	expiration := 10 * time.Minute
+	expiration := 2 * time.Minute
 	err = userCa.Set(ctx, key, value, expiration).Err()
 	if err != nil {
 		return "", errno.NewErrNo(errno.InternalRedisErrorCode, "write code to cache error:"+err.Error())

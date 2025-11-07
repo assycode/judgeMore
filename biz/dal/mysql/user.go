@@ -66,6 +66,14 @@ func GetUserInfoByRoleId(ctx context.Context, role_id string) (*model.User, erro
 		DeleteAT: 0,
 	}, nil
 }
+func UpdateUserPassword(ctx context.Context, user *model.User) error {
+	err := db.WithContext(ctx).
+		Table(constants.TableUser).
+		Where("role_id = ?", user.Uid).
+		Update("password", user.Password).
+		Error
+	return err
+}
 
 func UpdateInfoByRoleId(ctx context.Context, role_id string, element ...string) (*model.User, error) {
 	updateFields := make(map[string]interface{})

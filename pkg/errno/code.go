@@ -23,6 +23,7 @@ const (
 	RepeatOperationErrorCode = 40000 + iota
 	ServiceUserExistCode
 	ServiceEventExistCode
+	ServiceAppealExistCode
 	ServiceEmailIncorrectCode
 	ServiceUserDeathCode
 	ServiceUserNotExistCode
